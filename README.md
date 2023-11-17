@@ -7,7 +7,9 @@
 ## Overview
 This repository contains STL files pertaining to all existing, as well as obsolete, 3D-printed elements used in our products.
 
-Each file is named with a unique SKU to distinguish its particular version. In case a fresh revision becomes necessary (such as rectifying a mistake or enhancement), the previous file gets relocated into a folder labeled "deprecated" while a brand new SKU is allocated to the replacement file.
+Each file is named with a unique SKU to distinguish its particular version. In the case where a fresh revision becomes necessary (such as rectifying a serious issue with the part, significant enhancement, or complete redesign), the previous version gets relocated into a folder labeled "deprecated", and a brand new SKU is allocated to the replacement.
+
+In the case of a minor revision to a printed part that does not affect functionality (such as improving printability or tweaking non-critical tolerances), a new version is uploaded in place, maintaining the existing SKU. Every effort is made to describe these minor changes in the commit message when that part is updated.
 
 ## Repository Layout
 - Generic parts which are shared across projects are stored either in 'Alignment Tools' or 'Miscellaneous'
