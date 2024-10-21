@@ -1,0 +1,67 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Deploy Printed Parts
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Restore Timestamps
+        uses: chetan/git-restore-mtime-action@v1
+
+      - name: Build
+        env:
+          DEFINITIONS_DIR: .github/pack_definitions
+          OUT_DIR: .github/workspace
+          WORK_DIR: /tmp
+        run: |
+          mkdir -p "$OUT_DIR"
+
+           for DEF_FILE in "$DEFINITIONS_DIR"/*; do
+              PACK_NAME="${DEF_FILE##*/}"
+              PACK_ZIP_NAME="$PACK_NAME"_printed_parts.zip
+
+              echo "- Building STL Pack: $PACK_NAME"
+              mkdir -p "$WORK_DIR/$PACK_NAME"
+
+              grep PP .github/pack_definitions/"$PACK_NAME" | tr -d '\r' | while read -r SKU; do
+                  echo "  - Processing SKU: $SKU"
+                  find . -name "$SKU*.stl" -not -path "*Deprecated*" -exec cp -p  "{}" "$WORK_DIR/$PACK_NAME/" \;
+              done
+
+              echo "  - Adding LICENSE"
+              cp -p LICENSE "$WORK_DIR/$PACK_NAME/"
+
+              echo "  - Archiving STLs into $PACK_ZIP_NAME"
+              7z a -tzip "$OUT_DIR/$PACK_ZIP_NAME" "$WORK_DIR/$PACK_NAME"/*
+
+              echo "  - Updating timestamp of $PACK_ZIP_NAME"
+              NEWEST_FILE="$(find $WORK_DIR/$PACK_NAME -type f -exec ls -t1 {} + | head -1)"
+              echo "    - Newest file in pack is ${NEWEST_FILE##*/}"
+              echo "    - Timestamp: $(date -r $NEWEST_FILE)"
+              touch -r "$NEWEST_FILE" "$OUT_DIR/$PACK_ZIP_NAME"
+          done
+
+      - name: Configure SSH
+        run: |
+          mkdir -m 700 $HOME/.ssh
+          ssh-keyscan ${{ secrets.SSH_HOST }} > $HOME/.ssh/known_hosts
+          echo "${{ secrets.SSH_KEY }}" > $HOME/.ssh/id_rsa
+          chmod 600 $HOME/.ssh/id_rsa
+
+      - name: Deploy via SSH
+        run: |
+          scp -s -p .github/workspace/*.zip ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/files.ratrig.com/printed_parts/
