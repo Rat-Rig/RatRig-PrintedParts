@@ -31,6 +31,8 @@ In all cases, any STL which has been replaced is relocated into a subfolder labe
     ├── PP000013-40mm_fan_cage_V01_20230628.stl
     └── ...
 ```
+## Downloads
+Individual STL files can be downloaded directly from this repository. Alternately, printed part packs for each product can be downloaded at [files.ratrig.com](https://files.ratrig.com/printed_parts/).
 
 ## License
 All files contained within this repository are licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License](https://creativecommons.org/licenses/by-nc-sa/4.0/). See LICENSE for the full details.
