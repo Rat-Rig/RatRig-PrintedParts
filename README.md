@@ -1,5 +1,5 @@
 <a href="https://ratrig.com/">
-    <img src="https://ratrig.com/media/athlete2/default/RR_Logo_White.png" alt="RatRig logo" title="RatRig" height="74" />
+    <img src="https://files.ratrig.com/wiki_assets/_ratrig_logo_white.png" alt="RatRig logo" title="RatRig" height="74" />
 </a>
 
 # Printed Parts Repository
