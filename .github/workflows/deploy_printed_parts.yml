@@ -49,7 +49,7 @@ jobs:
               7z a -tzip "$OUT_DIR/$PACK_ZIP_NAME" "$WORK_DIR/$PACK_NAME"/*
 
               echo "  - Updating timestamp of $PACK_ZIP_NAME"
-              NEWEST_FILE="$(find $WORK_DIR/$PACK_NAME -type f -exec ls -t1 {} + | head -1)"
+              NEWEST_FILE="$(find $WORK_DIR/$PACK_NAME -type f -exec ls -t1 {} + | head -1 ; dd of=/dev/null)"
               echo "    - Newest file in pack is ${NEWEST_FILE##*/}"
               echo "    - Timestamp: $(date -r $NEWEST_FILE)"
               touch -r "$NEWEST_FILE" "$OUT_DIR/$PACK_ZIP_NAME"
